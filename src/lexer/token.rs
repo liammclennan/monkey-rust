@@ -1,4 +1,9 @@
-pub enum TokenType {
+/**
+ * The `Token` struct, and associated behavior.
+ */
+
+#[derive(PartialEq,Debug)]
+ pub enum TokenType {
     Illegal,
     Eof,
     Identifier,
@@ -15,6 +20,7 @@ pub enum TokenType {
     Let,
 }
 
+#[derive(PartialEq,Debug)]
 pub struct Token {
     pub token_type: TokenType,
     pub literal: String,
