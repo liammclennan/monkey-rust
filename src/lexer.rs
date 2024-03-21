@@ -31,7 +31,7 @@ impl Lexer {
         self.read_position += 1;
     }
 
-    fn read_identifier(&mut self) -> String {
+    fn read_word(&mut self) -> String {
         let position = self.position;
         while self.ch.is_ascii_alphanumeric() {
             self.read_char();
@@ -40,6 +40,8 @@ impl Lexer {
     }
 
     fn next_token(&mut self) -> Token {
+        self.skip_whitespace();
+
         let t = match self.ch {
             b'=' => Token { token_type: TokenType::Assign, literal: "=".to_string()},
             b'+' => Token { token_type: TokenType::Plus, literal: "+".to_string()},
@@ -51,15 +53,25 @@ impl Lexer {
             b'}' => Token { token_type: TokenType::RightBrace, literal: "}".to_string()},
             b'\0' => Token { token_type: TokenType::Eof, literal: "".to_string()},
             _ => {
-                // if self.ch.is_ascii_alphabetic() {
-
-                // }
-                panic!("Gaahhhh")
-                
+                if self.ch.is_ascii_alphabetic() {
+                    let word = self.read_word();
+                    Token { token_type: Token::lookup_word(&word), literal: word }
+                } else if self.ch.is_ascii_digit() {
+                    println!("{}", self.ch as char);
+                    Token { token_type: TokenType::Int, literal: self.ch.to_string() }
+                } else {
+                    Token { token_type: TokenType::Illegal, literal: self.ch.to_string() }
+                }
             }
         };
         self.read_char();
         t
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.ch == b' ' || self.ch == b'\t' || self.ch == b'\n' || self.ch == b'\r' {
+            self.read_char();
+        }
     }
 }
 
@@ -67,16 +79,17 @@ impl Lexer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use token::TokenType;
 
     #[test]
     fn next_token_test() {
-        let input = "=+(){},;";
+        let input = "=+let ,5";
 
         let expecteds: Vec<(TokenType, String)> = vec![
             (TokenType::Assign, "=".to_string()),
             (TokenType::Plus, "+".to_string()),
             (TokenType::Let, "let".to_string()),
+            (TokenType::Comma, ",".to_string()),
+            (TokenType::Int, "5".to_string()),
         ];
 
         let mut lex = Lexer::new(input.to_string());
@@ -92,6 +105,6 @@ mod tests {
     fn read_word() {
         let input = "The cat, in the hat";
         let mut lex = Lexer::new(input.to_string());
-        assert_eq!("The", lex.read_identifier());
+        assert_eq!("The", lex.read_word());
     }
 }
