@@ -57,8 +57,8 @@ impl Lexer {
                     let word = self.read_word();
                     Token { token_type: Token::lookup_word(&word), literal: word }
                 } else if self.ch.is_ascii_digit() {
-                    println!("{}", self.ch as char);
-                    Token { token_type: TokenType::Int, literal: (self.ch as char).to_string() }
+                    let word = self.read_word();
+                    Token { token_type: TokenType::Int, literal: word }
                 } else {
                     Token { token_type: TokenType::Illegal, literal: (self.ch as char).to_string() }
                 }
@@ -79,17 +79,17 @@ impl Lexer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn next_token_test() {
-        let input = "=+let ,5";
+        let input = "=+let ,521";
 
         let expecteds: Vec<(TokenType, String)> = vec![
             (TokenType::Assign, "=".to_string()),
             (TokenType::Plus, "+".to_string()),
             (TokenType::Let, "let".to_string()),
             (TokenType::Comma, ",".to_string()),
-            (TokenType::Int, "5".to_string()),
+            (TokenType::Int, "521".to_string()),
         ];
 
         let mut lex = Lexer::new(input.to_string());
