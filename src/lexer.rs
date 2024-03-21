@@ -58,9 +58,9 @@ impl Lexer {
                     Token { token_type: Token::lookup_word(&word), literal: word }
                 } else if self.ch.is_ascii_digit() {
                     println!("{}", self.ch as char);
-                    Token { token_type: TokenType::Int, literal: self.ch.to_string() }
+                    Token { token_type: TokenType::Int, literal: (self.ch as char).to_string() }
                 } else {
-                    Token { token_type: TokenType::Illegal, literal: self.ch.to_string() }
+                    Token { token_type: TokenType::Illegal, literal: (self.ch as char).to_string() }
                 }
             }
         };
@@ -79,7 +79,7 @@ impl Lexer {
 #[cfg(test)]
 mod tests {
     use super::*;
-
+    
     #[test]
     fn next_token_test() {
         let input = "=+let ,5";
