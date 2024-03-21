@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn next_token_test() {
-        let input = "=+let ,521";
+        let input = "=+let ,521 if apple {}";
 
         let expecteds: Vec<(TokenType, String)> = vec![
             (TokenType::Assign, "=".to_string()),
@@ -90,6 +90,10 @@ mod tests {
             (TokenType::Let, "let".to_string()),
             (TokenType::Comma, ",".to_string()),
             (TokenType::Int, "521".to_string()),
+            (TokenType::If, "if".to_string()),
+            (TokenType::Identifier, "apple".to_string()),
+            (TokenType::LeftBrace, "{".to_string()),
+            (TokenType::RightBrace, "}".to_string()),
         ];
 
         let mut lex = Lexer::new(input.to_string());
