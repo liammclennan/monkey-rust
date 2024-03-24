@@ -45,6 +45,12 @@ impl Lexer {
         let t = match self.ch {
             b'=' => Token { token_type: TokenType::Assign, literal: "=".to_string()},
             b'+' => Token { token_type: TokenType::Plus, literal: "+".to_string()},
+            b'-' => Token { token_type: TokenType::Minus, literal: "-".to_string()},
+            b'!' => Token { token_type: TokenType::Bang, literal: "!".to_string()},
+            b'*' => Token { token_type: TokenType::Asterisk, literal: "*".to_string()},
+            b'/' => Token { token_type: TokenType::Slash, literal: "/".to_string()},
+            b'<' => Token { token_type: TokenType::Lt, literal: "<".to_string()},
+            b'>' => Token { token_type: TokenType::Gt, literal: ">".to_string()},
             b';' => Token { token_type: TokenType::Semicolon, literal: ";".to_string()},
             b'(' => Token { token_type: TokenType::LeftParen, literal: "(".to_string()},
             b')' => Token { token_type: TokenType::RightParen, literal: ")".to_string()},
@@ -82,7 +88,7 @@ mod tests {
 
     #[test]
     fn next_token_test() {
-        let input = "=+let ,521 if apple {}";
+        let input = "=+let ,521 if apple {} -/*<>";
 
         let expecteds: Vec<(TokenType, String)> = vec![
             (TokenType::Assign, "=".to_string()),
@@ -94,6 +100,11 @@ mod tests {
             (TokenType::Identifier, "apple".to_string()),
             (TokenType::LeftBrace, "{".to_string()),
             (TokenType::RightBrace, "}".to_string()),
+            (TokenType::Minus, "-".to_string()),
+            (TokenType::Slash, "/".to_string()),
+            (TokenType::Asterisk, "*".to_string()),
+            (TokenType::Lt, "<".to_string()),
+            (TokenType::Gt, ">".to_string()),
         ];
 
         let mut lex = Lexer::new(input.to_string());
