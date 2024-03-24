@@ -1,6 +1,6 @@
 use self::token::{Token,TokenType};
 
-mod token;
+pub mod token;
 
 #[derive(Debug)]
 pub struct Lexer {
@@ -40,7 +40,7 @@ impl Lexer {
         self.input[position..self.position].to_string()
     }
 
-    fn next_token(&mut self) -> Token {
+    pub fn next_token(&mut self) -> Token {
         self.skip_whitespace();
 
         let t = match self.ch {
