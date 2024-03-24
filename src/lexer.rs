@@ -56,7 +56,16 @@ impl Lexer {
             } ,
             b'+' => Token { token_type: TokenType::Plus, literal: "+".to_string()},
             b'-' => Token { token_type: TokenType::Minus, literal: "-".to_string()},
-            b'!' => Token { token_type: TokenType::Bang, literal: "!".to_string()},
+            b'!' => match self.peek_char() {
+                b'=' => {
+                    self.read_char();
+                    self.read_char();
+                    Token { token_type: TokenType::NotEq, literal: "!=".to_string() }
+                },
+                _ => {
+                    Token { token_type: TokenType::Bang, literal: "!".to_string() }
+                }
+            }
             b'*' => Token { token_type: TokenType::Asterisk, literal: "*".to_string()},
             b'/' => Token { token_type: TokenType::Slash, literal: "/".to_string()},
             b'<' => Token { token_type: TokenType::Lt, literal: "<".to_string()},
@@ -108,12 +117,13 @@ mod tests {
 
     #[test]
     fn equality_test() {
-        let input = "return<>==";
+        let input = "return<>==!=";
         let mut lex = Lexer::new(input.to_string());
         assert_eq!(Token { token_type: TokenType::Return, literal: "return".to_string() }, lex.next_token());
         assert_eq!(Token { token_type: TokenType::Lt, literal: "<".to_string() }, lex.next_token());
         assert_eq!(Token { token_type: TokenType::Gt, literal: ">".to_string() }, lex.next_token());
         assert_eq!(Token { token_type: TokenType::Eq, literal: "==".to_string() }, lex.next_token());
+        assert_eq!(Token { token_type: TokenType::NotEq, literal: "!=".to_string() }, lex.next_token());
 
     }
 
