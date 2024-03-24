@@ -31,6 +31,8 @@ use std::collections::HashMap;
     If,
     Else,
     Return,
+    Eq,
+    NotEq,
 }
 
 #[derive(PartialEq,Debug)]
